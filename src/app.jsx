@@ -7,7 +7,6 @@ import 'materialize-css/dist/css/materialize.css';
 const ESC_KEY_CODE = 27;
 
 class App extends Component {
-
   constructor(props) {
     super(props);
 
@@ -29,23 +28,23 @@ class App extends Component {
           <div className="col l12 m12">
             <header className="z-depth-3">
               <h1>GitHub browser</h1>
-              <Search/>
+              <Search />
             </header>
           </div>
         </div>
         <div className="row">
           <div className="col l5 m5">
             <section className="z-depth-3">
-              <SearchResults/>
+              <SearchResults />
             </section>
           </div>
           <div className="col l7 m7">
             <section className="z-depth-3">
-              {
-                this.props.isUserDetailsVisible
-                  ? <UserDetails/>
-                  : <aside>In order to check out details select a user</aside>
-              }
+              {this.props.isUserDetailsVisible ? (
+                <UserDetails />
+              ) : (
+                <aside>In order to check out details select a user</aside>
+              )}
             </section>
           </div>
         </div>
@@ -53,9 +52,9 @@ class App extends Component {
     );
   }
 
-  handleKeyUp({keyCode}) {
+  handleKeyUp({ keyCode }) {
     if (keyCode === ESC_KEY_CODE) {
-      this.props.onReset()
+      this.props.onReset();
     }
   }
 }

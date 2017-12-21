@@ -28,21 +28,25 @@ function usersReducer(
     fetchingFor: null,
     results: {}
   },
-  {type, payload}
+  { type, payload }
 ) {
   switch (type) {
     case SEARCH_USERS_REQUEST:
-      return {...state, searching: true, query: payload.query};
+      return { ...state, searching: true, query: payload.query };
 
     case GET_USER_REQUEST:
-      return {...state, fetching: true, fetchingFor: payload.login};
+      return { ...state, fetching: true, fetchingFor: payload.login };
 
     case SEARCH_USERS_SUCCESS:
-      return {...state, searching: false, results: groupBy(payload.users, (u) => u.login)};
+      return {
+        ...state,
+        searching: false,
+        results: groupBy(payload.users, u => u.login)
+      };
 
     case GET_USER_SUCCESS:
-      const clonedResults = { ...state.results, [payload.login]: payload.user};
-      return {...state, fetching: false, results: clonedResults};
+      const clonedResults = { ...state.results, [payload.login]: payload.user };
+      return { ...state, fetching: false, results: clonedResults };
 
     case RESET_USERS:
       return {
@@ -53,7 +57,7 @@ function usersReducer(
         results: {}
       };
     default:
-      return state
+      return state;
   }
 }
 
@@ -63,24 +67,23 @@ function reposReducer(
     login: null,
     results: {}
   },
-  {type, payload}
+  { type, payload }
 ) {
   switch (type) {
     case GET_REPOS_REQUEST:
-      return {...state, fetching: true, login: payload.login};
+      return { ...state, fetching: true, login: payload.login };
 
     case GET_REPOS_SUCCESS:
       const clonedResults = {
         ...state.results,
         [state.login]: payload.repos
       };
-      return {...state, fetching: false, results: clonedResults};
+      return { ...state, fetching: false, results: clonedResults };
 
     default:
-      return state
+      return state;
   }
 }
-
 
 function issuesReducer(
   state = {
@@ -88,18 +91,21 @@ function issuesReducer(
     login: null,
     results: {}
   },
-  {type, payload}
+  { type, payload }
 ) {
   switch (type) {
     case GET_ISSUES_REQUEST:
-      return {...state, fetching: true, login: payload.login};
+      return { ...state, fetching: true, login: payload.login };
     case GET_ISSUES_SUCCESS:
-      return {...state, fetching: false, results: groupBy(payload.issues, () => payload.repoName)};
+      return {
+        ...state,
+        fetching: false,
+        results: groupBy(payload.issues, () => payload.repoName)
+      };
     default:
-      return state
+      return state;
   }
 }
-
 
 // Search api
 export function searchUsers(query) {
@@ -108,19 +114,19 @@ export function searchUsers(query) {
     requestUsers.bind(null, query),
     rememberUsers,
     result => result.items
-  )
+  );
 }
 
 function requestUsers(query) {
-  return createAction(SEARCH_USERS_REQUEST, {query})
+  return createAction(SEARCH_USERS_REQUEST, { query });
 }
 
 function rememberUsers(users) {
-  return createAction(SEARCH_USERS_SUCCESS, {users})
+  return createAction(SEARCH_USERS_SUCCESS, { users });
 }
 
 export function resetUsers() {
-  return createAction(RESET_USERS)
+  return createAction(RESET_USERS);
 }
 
 // User details api
@@ -129,17 +135,16 @@ export function getUser(login) {
     `${GITHUB_API_URL}/users/${login}`,
     requestUserDetails.bind(null, login),
     saveUserDetails.bind(null, login)
-  )
+  );
 }
 
 function requestUserDetails(login) {
-  return createAction(GET_USER_REQUEST, {login})
+  return createAction(GET_USER_REQUEST, { login });
 }
 
 function saveUserDetails(login, user) {
-  return createAction(GET_USER_SUCCESS, {login, user})
+  return createAction(GET_USER_SUCCESS, { login, user });
 }
-
 
 // Repos api
 export function getRepos(login) {
@@ -147,27 +152,23 @@ export function getRepos(login) {
     `${GITHUB_API_URL}/users/${login}/repos`,
     requestReposForUser.bind(null, login),
     rememberRepos.bind(null, login)
-  )
+  );
 }
 
 function requestReposForUser(login) {
-  return createAction(GET_REPOS_REQUEST, {login})
+  return createAction(GET_REPOS_REQUEST, { login });
 }
 
 function rememberRepos(login, repos) {
-
   const getRepoIssuesForUser = getIssues.bind(null, login);
 
   return dispatch => {
-    dispatch(createAction(GET_REPOS_SUCCESS, {login, repos}));
+    dispatch(createAction(GET_REPOS_SUCCESS, { login, repos }));
 
     // bad way to retrieve repo issues (multiple requests), but with only 4 available api endpoints seems ok
-    repos
-      .map(r => r.name)
-      .forEach(compose(dispatch, getRepoIssuesForUser))
-  }
+    repos.map(r => r.name).forEach(compose(dispatch, getRepoIssuesForUser));
+  };
 }
-
 
 // Issues api
 export function getIssues(login, repoName) {
@@ -175,36 +176,40 @@ export function getIssues(login, repoName) {
     `${GITHUB_API_URL}/repos/${login}/${repoName}/issues`,
     requestIssues.bind(null, login, repoName),
     rememberIssues.bind(null, repoName)
-  )
+  );
 }
 
 function requestIssues(login, repoName) {
-  return createAction(GET_ISSUES_REQUEST, {login, repoName})
+  return createAction(GET_ISSUES_REQUEST, { login, repoName });
 }
 
 function rememberIssues(repoName, issues) {
-  return createAction(GET_ISSUES_SUCCESS, {repoName, issues})
+  return createAction(GET_ISSUES_SUCCESS, { repoName, issues });
 }
 
-
 // Utils
-function createAsyncFetchingAction(path, requestActionCreator, successActionCreator, resultAccessor = identity) {
+function createAsyncFetchingAction(
+  path,
+  requestActionCreator,
+  successActionCreator,
+  resultAccessor = identity
+) {
   return dispatch => {
     dispatch(requestActionCreator());
     return fetch(path)
       .then(response => response.json())
       .then(resultAccessor)
-      .then(compose(dispatch, successActionCreator))
-  }
+      .then(compose(dispatch, successActionCreator));
+  };
 }
 
 function identity(arg) {
-  return arg
+  return arg;
 }
 
 function groupBy(items, predicate) {
   return items.reduce((acc, elem) => {
     acc[predicate(elem)] = elem;
-    return acc
-  }, {})
+    return acc;
+  }, {});
 }

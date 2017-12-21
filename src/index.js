@@ -7,7 +7,6 @@ import github from './github.duck';
 import ui from './ui.duck';
 import App from './app.container';
 
-
 const reducer = combineReducers({
   github,
   ui
@@ -15,10 +14,7 @@ const reducer = combineReducers({
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const store = createStore(
-  reducer,
-  composeEnhancers(applyMiddleware(thunk))
-);
+const store = createStore(reducer, composeEnhancers(applyMiddleware(thunk)));
 
 ReactDOM.render(
   <Provider store={store}>

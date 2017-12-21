@@ -1,6 +1,6 @@
-import { compose } from "redux";
 import { connect } from "react-redux";
 import { resetUsers } from "./github.duck";
+import { hideUserDetails } from './ui.duck';
 import App from "./app";
 
 function mapStateToProps({ ui }) {
@@ -11,7 +11,10 @@ function mapStateToProps({ ui }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onReset: compose(dispatch, resetUsers)
+    onReset: () => {
+      dispatch(hideUserDetails());
+      dispatch(resetUsers());
+    }
   };
 }
 

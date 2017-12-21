@@ -113,6 +113,11 @@ function issuesReducer(
 
 // Search api
 export function searchUsers(query) {
+
+  if (query === '') {
+    return createAction(RESET_USERS);
+  }
+
   return createAsyncFetchingAction(
     `${GITHUB_API_URL}/search/users?q=${query}`,
     requestUsers.bind(null, query),

@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`search results should show that no results were found 1`] = `
+<span
+  className="search-results"
+>
+  No results matching query were found
+</span>
+`;
+
+exports[`search results should show users if they were found 1`] = `
+<table
+  className="search-results"
+>
+  <thead>
+    <tr>
+      <th>
+        Avatar
+      </th>
+      <th>
+        Name
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <img
+          src="http://example.com/fancy_kitten.png"
+        />
+      </td>
+      <td>
+        John Doe
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <img
+          src="http://example.com/death_start.png"
+        />
+      </td>
+      <td>
+        Darth Weider
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <img
+          src="http://example.com/windows.png"
+        />
+      </td>
+      <td>
+        Bill Gates
+      </td>
+    </tr>
+  </tbody>
+</table>
+`;

@@ -23,9 +23,13 @@ exports[`search results should show users if they were found 1`] = `
     </tr>
   </thead>
   <tbody>
-    <tr>
+    <tr
+      data-test="user"
+      onClick={[Function]}
+    >
       <td>
         <img
+          alt="avatar"
           src="http://example.com/fancy_kitten.png"
         />
       </td>
@@ -33,9 +37,13 @@ exports[`search results should show users if they were found 1`] = `
         John Doe
       </td>
     </tr>
-    <tr>
+    <tr
+      data-test="user"
+      onClick={[Function]}
+    >
       <td>
         <img
+          alt="avatar"
           src="http://example.com/death_start.png"
         />
       </td>
@@ -43,9 +51,13 @@ exports[`search results should show users if they were found 1`] = `
         Darth Weider
       </td>
     </tr>
-    <tr>
+    <tr
+      data-test="user"
+      onClick={[Function]}
+    >
       <td>
         <img
+          alt="avatar"
           src="http://example.com/windows.png"
         />
       </td>

@@ -1,4 +1,5 @@
-import { compose, combineReducers } from 'redux'
+import { compose, combineReducers } from 'redux';
+import { createAction } from './actions'
 
 const GITHUB_API_URL = 'https://api.github.com';
 
@@ -16,7 +17,7 @@ export default combineReducers({
   users: usersReducer,
   repos: reposReducer,
   issues: issuesReducer
-})
+});
 
 
 function usersReducer(
@@ -42,7 +43,7 @@ function usersReducer(
       return {...state, searching: false, results};
     case GET_USER_SUCCESS:
       const clonedResults = { ...state.results, [payload.login]: payload.user};
-      return {...state, results: clonedResults};
+      return {...state, fetching: false, results: clonedResults};
     default:
       return state
   }
@@ -60,11 +61,12 @@ function reposReducer(
     case GET_REPOS_REQUEST:
       return {...state, fetching: true, login: payload.login};
     case GET_REPOS_SUCCESS:
-      const results = payload.repos.reduce((res, repo) => {
-        res[repo.owner.login] = repo;
-        return res
-      }, {});
-      return {...state, fetching: false, results};
+
+      const clonedResults = {
+        ...state.results,
+        [state.login]: payload.repos
+      };
+      return {...state, fetching: false, results: clonedResults};
     default:
       return state
   }
@@ -177,8 +179,4 @@ function createAsyncAction(path, requestActionCreator, successActionCreator, res
 
 function identity(arg) {
   return arg
-}
-
-function createAction(type, payload) {
-  return {type, payload}
 }

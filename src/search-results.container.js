@@ -1,10 +1,22 @@
 import { connect } from 'react-redux';
+import { showUserDetails } from './ui.duck'
+import { getUser, getRepos } from './github.duck';
 import SearchResults from './search-results';
 
-function mapStateToProps(state) {
+function mapStateToProps({github: {users: {results}}}) {
   return {
-    users: Object.values(state.users.results)
+    users: Object.values(results)
   }
 }
 
-export default connect(mapStateToProps)(SearchResults)
+function mapDispatchToProps(dispatch) {
+  return {
+    onUserSelect: (login) => {
+      dispatch(getUser(login));
+      dispatch(getRepos(login));
+      dispatch(showUserDetails());
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchResults)

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { searchUsers } from './github.duck';
 import Search from './search';
 
-function mapStateToProps({users: {query}}) {
+function mapStateToProps({github: {users: {query}}}) {
   return { query }
 }
 

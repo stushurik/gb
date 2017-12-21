@@ -1,7 +1,7 @@
 import React from 'react';
 import './search-results.css';
 
-export default ({users}) => (
+export default ({users, onUserSelect}) => (
   users.length
     ? (
       <table className="search-results">
@@ -14,8 +14,8 @@ export default ({users}) => (
         <tbody>
           {
             users.map(user => (
-              <tr key={user.id}>
-                <td><img src={user.avatar_url}/></td>
+              <tr key={user.id} data-test="user" onClick={() => onUserSelect(user.login)}>
+                <td><img src={user.avatar_url} alt="avatar"/></td>
                 <td>{user.login}</td>
               </tr>
             ))

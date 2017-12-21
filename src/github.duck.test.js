@@ -277,20 +277,13 @@ describe('github duck', () => {
 
       it('should remember found users when users are received', () => {
         const login = String(Math.random());
-        const repos = [
-          {owner: {login: String(Math.random())}},
-          {owner: {login: String(Math.random())}},
-          {owner: {login: String(Math.random())}}
-        ];
+        const repos = [Symbol('repo1'), Symbol('repo4'), Symbol('repo3')];
 
-        state = reducer({}, {type: GET_REPOS_SUCCESS, payload: {login, repos}});
+        state = reducer({repos: {login}}, {type: GET_REPOS_SUCCESS, payload: {login, repos}});
         expect(state.repos.fetching).toEqual(false);
-        expect(state.repos.results).toMatchObject(
-          repos.reduce((retVal, repo) => {
-            retVal[repo.owner.login] = repo;
-            return retVal
-          }, {})
-        )
+        expect(state.repos.results).toMatchObject({
+          [login]: repos
+        })
       })
     })
 

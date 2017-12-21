@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Search from './search.container';
 import SearchResults from './search-results.container';
+import UserDetails from './user-details.container'
 import './app.css';
 
 class App extends Component {
@@ -13,6 +14,11 @@ class App extends Component {
         </header>
         <section className="search-results-container">
           <SearchResults/>
+          {
+            this.props.showUserDetails
+              ? <UserDetails/>
+              : null
+          }
         </section>
       </div>
     );

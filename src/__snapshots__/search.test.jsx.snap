@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`search should render input with label 1`] = `
+<div
+  className="search-box"
+>
+  <div
+    className="search-box__field"
+  >
+    <label
+      className="search-box__label"
+    >
+      Search
+    </label>
+    <input
+      className="search-box__input"
+      onChange={[Function]}
+      placeholder="Enter github user name"
+      type="text"
+      value="Some query"
+    />
+  </div>
+  <button
+    className="search-box__trigger"
+    onClick={[Function]}
+  >
+    SEARCH
+  </button>
+</div>
+`;

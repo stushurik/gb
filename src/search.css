@@ -1,0 +1,27 @@
+.search-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.search-box__field {
+    flex: 1;
+    margin-bottom: 10px;
+}
+
+.search-box__label {
+    display: block;
+    color: grey;
+    margin-bottom: 10px;
+}
+
+.search-box__input {
+    display: block;
+    color: grey;
+    border: 0;
+    border-bottom: grey solid 1px;
+}
+
+.search-box__trigger {
+    flex: 1;
+    width: 100px;
+}

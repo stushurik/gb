@@ -11,6 +11,7 @@ export const GET_REPOS_REQUEST = 'GET_REPOS_REQUEST';
 export const GET_REPOS_SUCCESS = 'GET_REPOS_SUCCESS';
 export const GET_ISSUES_REQUEST = 'GET_ISSUES_REQUEST';
 export const GET_ISSUES_SUCCESS = 'GET_ISSUES_SUCCESS';
+export const RESET_USERS = 'RESET_USERS';
 
 
 export default combineReducers({
@@ -18,7 +19,6 @@ export default combineReducers({
   repos: reposReducer,
   issues: issuesReducer
 });
-
 
 function usersReducer(
   state = {
@@ -44,6 +44,14 @@ function usersReducer(
     case GET_USER_SUCCESS:
       const clonedResults = { ...state.results, [payload.login]: payload.user};
       return {...state, fetching: false, results: clonedResults};
+    case RESET_USERS:
+      return {
+        searching: false,
+        query: null,
+        fetching: false,
+        fetchingFor: null,
+        results: {}
+      };
     default:
       return state
   }
@@ -111,6 +119,9 @@ function rememberUsers(users) {
   return createAction(SEARCH_USERS_SUCCESS, {users})
 }
 
+export function resetUsers() {
+  return createAction(RESET_USERS)
+}
 
 // User details api
 export function getUser(login) {

@@ -29,7 +29,6 @@ describe('search', () => {
     const value = String(Math.random());
 
     sut.find('input').simulate('change', {target: {value}});
-    sut.find('button').simulate('click');
 
     expect(props.onQuerySubmit).toHaveBeenCalledWith(value);
   })

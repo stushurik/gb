@@ -33,17 +33,17 @@ function usersReducer(
   switch (type) {
     case SEARCH_USERS_REQUEST:
       return {...state, searching: true, query: payload.query};
+
     case GET_USER_REQUEST:
       return {...state, fetching: true, fetchingFor: payload.login};
+
     case SEARCH_USERS_SUCCESS:
-      const results = payload.users.reduce((res, user) => {
-        res[user.login] = user;
-        return res
-      }, {});
-      return {...state, searching: false, results};
+      return {...state, searching: false, results: groupBy(payload.users, (u) => u.login)};
+
     case GET_USER_SUCCESS:
       const clonedResults = { ...state.results, [payload.login]: payload.user};
       return {...state, fetching: false, results: clonedResults};
+
     case RESET_USERS:
       return {
         searching: false,
@@ -68,13 +68,14 @@ function reposReducer(
   switch (type) {
     case GET_REPOS_REQUEST:
       return {...state, fetching: true, login: payload.login};
-    case GET_REPOS_SUCCESS:
 
+    case GET_REPOS_SUCCESS:
       const clonedResults = {
         ...state.results,
         [state.login]: payload.repos
       };
       return {...state, fetching: false, results: clonedResults};
+
     default:
       return state
   }
@@ -85,16 +86,15 @@ function issuesReducer(
   state = {
     fetching: false,
     login: null,
-    repoName: null,
-    results: []
+    results: {}
   },
   {type, payload}
 ) {
   switch (type) {
     case GET_ISSUES_REQUEST:
-      return {...state, fetching: true, login: payload.login, repoName: payload.repoName};
+      return {...state, fetching: true, login: payload.login};
     case GET_ISSUES_SUCCESS:
-      return {...state, fetching: false, issues: payload.issues};
+      return {...state, fetching: false, results: groupBy(payload.issues, () => payload.repoName)};
     default:
       return state
   }
@@ -103,7 +103,7 @@ function issuesReducer(
 
 // Search api
 export function searchUsers(query) {
-  return createAsyncAction(
+  return createAsyncFetchingAction(
     `${GITHUB_API_URL}/search/users?q=${query}`,
     requestUsers.bind(null, query),
     rememberUsers,
@@ -125,7 +125,7 @@ export function resetUsers() {
 
 // User details api
 export function getUser(login) {
-  return createAsyncAction(
+  return createAsyncFetchingAction(
     `${GITHUB_API_URL}/users/${login}`,
     requestUserDetails.bind(null, login),
     saveUserDetails.bind(null, login)
@@ -143,7 +143,7 @@ function saveUserDetails(login, user) {
 
 // Repos api
 export function getRepos(login) {
-  return createAsyncAction(
+  return createAsyncFetchingAction(
     `${GITHUB_API_URL}/users/${login}/repos`,
     requestReposForUser.bind(null, login),
     rememberRepos.bind(null, login)
@@ -155,16 +155,26 @@ function requestReposForUser(login) {
 }
 
 function rememberRepos(login, repos) {
-  return createAction(GET_REPOS_SUCCESS, {login, repos})
+
+  const getRepoIssuesForUser = getIssues.bind(null, login);
+
+  return dispatch => {
+    dispatch(createAction(GET_REPOS_SUCCESS, {login, repos}));
+
+    // bad way to retrieve repo issues (multiple requests), but with only 4 available api endpoints seems ok
+    repos
+      .map(r => r.name)
+      .forEach(compose(dispatch, getRepoIssuesForUser))
+  }
 }
 
 
 // Issues api
 export function getIssues(login, repoName) {
-  return createAsyncAction(
+  return createAsyncFetchingAction(
     `${GITHUB_API_URL}/repos/${login}/${repoName}/issues`,
     requestIssues.bind(null, login, repoName),
-    rememberIssues
+    rememberIssues.bind(null, repoName)
   )
 }
 
@@ -172,13 +182,13 @@ function requestIssues(login, repoName) {
   return createAction(GET_ISSUES_REQUEST, {login, repoName})
 }
 
-function rememberIssues(issues) {
-  return createAction(GET_ISSUES_SUCCESS, {issues})
+function rememberIssues(repoName, issues) {
+  return createAction(GET_ISSUES_SUCCESS, {repoName, issues})
 }
 
 
 // Utils
-function createAsyncAction(path, requestActionCreator, successActionCreator, resultAccessor = identity) {
+function createAsyncFetchingAction(path, requestActionCreator, successActionCreator, resultAccessor = identity) {
   return dispatch => {
     dispatch(requestActionCreator());
     return fetch(path)
@@ -190,4 +200,11 @@ function createAsyncAction(path, requestActionCreator, successActionCreator, res
 
 function identity(arg) {
   return arg
+}
+
+function groupBy(items, predicate) {
+  return items.reduce((acc, elem) => {
+    acc[predicate(elem)] = elem;
+    return acc
+  }, {})
 }

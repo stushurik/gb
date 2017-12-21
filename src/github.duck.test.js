@@ -149,16 +149,6 @@ describe('github duck', () => {
         expect(fetchSpy).toHaveBeenCalledWith(`https://api.github.com/users/${login}/repos`)
       });
 
-      it('should remember repos on success', () => {
-        expect(dispatch).toHaveBeenCalledWith({
-          type: GET_REPOS_SUCCESS,
-          payload: {
-            login,
-            repos: json
-          }
-        })
-      });
-
     });
 
     describe('get issues', () => {
@@ -191,14 +181,15 @@ describe('github duck', () => {
         })
       });
 
-      it('should get repos by login and repousing github api', () => {
+      it('should get issues by login and repo using github api', () => {
         expect(fetchSpy).toHaveBeenCalledWith(`https://api.github.com/repos/${login}/${repoName}/issues`)
       });
 
-      it('should remember repos on success', () => {
+      it('should remember issues on success', () => {
         expect(dispatch).toHaveBeenCalledWith({
           type: GET_ISSUES_SUCCESS,
           payload: {
+            repoName,
             issues: json
           }
         })

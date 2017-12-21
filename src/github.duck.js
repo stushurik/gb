@@ -97,10 +97,14 @@ function issuesReducer(
     case GET_ISSUES_REQUEST:
       return { ...state, fetching: true, login: payload.login };
     case GET_ISSUES_SUCCESS:
+      const clonedResults = {
+        ...state.results,
+        [payload.repoName]: payload.issues
+      };
       return {
         ...state,
         fetching: false,
-        results: groupBy(payload.issues, () => payload.repoName)
+        results: clonedResults
       };
     default:
       return state;

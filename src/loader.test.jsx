@@ -11,9 +11,9 @@ describe('loader', () => {
     Children = () => null
   });
 
-  it('should show `loading` when is not ready', () => {
+  it('should show loader when is not ready', () => {
     sut = shallow(<Loader ready={false}><Children/></Loader>);
-    expect(sut.text()).toEqual('loading');
+    expect(sut.find('[data-test="loader"]').exists()).toBeTruthy();
   });
 
   it('should not show content when is not ready', () => {

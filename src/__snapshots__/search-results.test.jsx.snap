@@ -1,17 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`search results should show that no results were found 1`] = `
-<span
-  className="search-results"
->
+<span>
   No results matching query were found
 </span>
 `;
 
 exports[`search results should show users if they were found 1`] = `
-<table
-  className="search-results"
->
+<table>
   <thead>
     <tr>
       <th>

@@ -1,5 +1,11 @@
+import React from 'react';
+
 export default ({ready, children}) => (
   ready
     ? children
-    : 'loading'
+    : (
+      <div className="progress">
+        <div className="indeterminate"></div>
+      </div>
+    )
 )

@@ -3,7 +3,7 @@ import App from './app'
 
 function mapStateToProps({ui}) {
   return {
-    showUserDetails: ui.isUserDetailsVisible
+    isUserDetailsVisible: ui.isUserDetailsVisible
   }
 
 }

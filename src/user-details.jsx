@@ -1,10 +1,9 @@
 import React from 'react';
 import UserDetailsLoader from './user-details-loader.container'
-import './user-details.css'
 
 export default ({user, repos}) => (
   <UserDetailsLoader>
-    <aside className="user-details">
+    <aside>
       <header>
         <img src={user.avatar_url} alt="avatar"/>
         <h2>{user.name}</h2>

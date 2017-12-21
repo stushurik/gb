@@ -1,10 +1,9 @@
 import React from 'react';
-import './search-results.css';
 
 export default ({users, onUserSelect}) => (
   users.length
     ? (
-      <table className="search-results">
+      <table>
         <thead>
           <tr>
             <th>Avatar</th>
@@ -23,5 +22,5 @@ export default ({users, onUserSelect}) => (
         </tbody>
       </table>
     )
-    : <span className="search-results">No results matching query were found</span>
+    : <span>No results matching query were found</span>
 )

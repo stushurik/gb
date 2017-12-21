@@ -1,11 +1,12 @@
 import React from 'react';
 import UserDetailsLoader from './user-details-loader.container';
+import './user-details.css';
 
 export default ({ user, repos, issuesByRepos }) => (
   <UserDetailsLoader>
     <aside>
       <header>
-        <img src={user.avatar_url} alt='avatar' />
+        <img className="userDetails__avatar" src={user.avatar_url} alt='avatar' />
         <h2>{user.name}</h2>
       </header>
       <table>
@@ -13,7 +14,7 @@ export default ({ user, repos, issuesByRepos }) => (
           <tr>
             <th>Repo name</th>
             <th>description</th>
-            <td>Number of issues</td>
+            <th>Number of issues</th>
           </tr>
         </thead>
         <tbody>
@@ -22,9 +23,11 @@ export default ({ user, repos, issuesByRepos }) => (
               <td>{repo.name}</td>
               <td>{repo.description}</td>
               <td>
-                {issuesByRepos[repo.name]
-                  ? issuesByRepos[repo.name].length
-                  : '-'}
+                {
+                  issuesByRepos[repo.name]
+                    ? issuesByRepos[repo.name].length
+                    : '-'
+                }
               </td>
             </tr>
           ))}

@@ -12,6 +12,9 @@ class App extends Component {
   }
 
   componentDidMount() {
+    // Because of react implementation of global events like key press handling,
+    // in order to allow user to interact via keyboard window.addEventListener is used
+    // For more information check out https://github.com/facebook/react/issues/285
     window.addEventListener('keyup', this.handleKeyUp)
   }
 

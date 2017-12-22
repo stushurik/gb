@@ -17,11 +17,12 @@ export default ({ users, onUserSelect }) =>
           {users.map(user => (
             <tr
               key={user.id}
-              data-test='user'
+              className="search-result__item"
               onClick={() => onUserSelect(user.login)}
+              data-test='user'
             >
               <td>
-                <img className="searchResult__avatar" src={user.avatar_url} alt='avatar'/>
+                <img className="search-result__avatar" src={user.avatar_url} alt='avatar'/>
               </td>
               <td>{user.login}</td>
             </tr>

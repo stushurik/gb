@@ -20,13 +20,14 @@ exports[`search results should show users if they were found 1`] = `
   </thead>
   <tbody>
     <tr
+      className="search-result__item"
       data-test="user"
       onClick={[Function]}
     >
       <td>
         <img
           alt="avatar"
-          className="searchResult__avatar"
+          className="search-result__avatar"
           src="http://example.com/fancy_kitten.png"
         />
       </td>
@@ -35,13 +36,14 @@ exports[`search results should show users if they were found 1`] = `
       </td>
     </tr>
     <tr
+      className="search-result__item"
       data-test="user"
       onClick={[Function]}
     >
       <td>
         <img
           alt="avatar"
-          className="searchResult__avatar"
+          className="search-result__avatar"
           src="http://example.com/death_start.png"
         />
       </td>
@@ -50,13 +52,14 @@ exports[`search results should show users if they were found 1`] = `
       </td>
     </tr>
     <tr
+      className="search-result__item"
       data-test="user"
       onClick={[Function]}
     >
       <td>
         <img
           alt="avatar"
-          className="searchResult__avatar"
+          className="search-result__avatar"
           src="http://example.com/windows.png"
         />
       </td>

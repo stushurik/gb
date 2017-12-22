@@ -1,4 +1,8 @@
-.searchResult__avatar {
+.search-result__avatar {
     width: 50px;
     height: 50px;
+}
+
+.search-result__item {
+    cursor: pointer;
 }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Search, SearchResults, UserDetails } from './containers';
 import 'materialize-css/dist/css/materialize.css';
+import './app.css'
 
 const ESC_KEY_CODE = 27;
 
@@ -27,7 +28,7 @@ class App extends Component {
       <div className="container" onKeyUp={this.handleKeyUp}>
         <div className="row">
           <div className="col l12 m12">
-            <header className="z-depth-3">
+            <header className="search-box z-depth-3">
               <h1>GitHub browser</h1>
               <Search />
             </header>
@@ -35,7 +36,7 @@ class App extends Component {
         </div>
         <div className="row">
           <div className="col l5 m5">
-            <section className="z-depth-3">
+            <section className="search-results z-depth-3">
               {this.props.hasApiErrors ? (
                 <div className="pink lighten-2">An error occurred while processing your request, please try again later</div>
               ) : (
@@ -44,7 +45,7 @@ class App extends Component {
             </section>
           </div>
           <div className="col l7 m7">
-            <section className="z-depth-3">
+            <section className="user-details z-depth-3">
               {this.props.isUserDetailsVisible ? (
                 <UserDetails />
               ) : (

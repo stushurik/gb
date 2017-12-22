@@ -1,3 +1,5 @@
+jest.mock('./search-results-loader.container', () => ({children}) => childrenu)
+
 import React from 'react';
 import renderer from 'react-test-renderer';
 import { shallow } from 'enzyme';

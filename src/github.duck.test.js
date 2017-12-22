@@ -50,7 +50,7 @@ describe('github duck', () => {
           items: Symbol('items')
         };
 
-        response = fakeResponse(null, json);
+        response = fakeResponse(null, 200, json);
         fetchSpy.mockImplementation(() => response);
 
         query = String(Math.random());
@@ -91,7 +91,7 @@ describe('github duck', () => {
       beforeEach(async done => {
         json = Symbol('user');
 
-        response = fakeResponse(null, json);
+        response = fakeResponse(null, 200, json);
         fetchSpy.mockImplementation(() => response);
 
         login = String(Math.random());
@@ -133,7 +133,7 @@ describe('github duck', () => {
       beforeEach(async done => {
         json = Symbol('repos');
 
-        response = fakeResponse(null, json);
+        response = fakeResponse(null, 200, json);
         fetchSpy.mockImplementation(() => response);
 
         login = String(Math.random());
@@ -167,7 +167,7 @@ describe('github duck', () => {
       beforeEach(async done => {
         json = Symbol('issues');
 
-        response = fakeResponse(null, json);
+        response = fakeResponse(null, 200, json);
         fetchSpy.mockImplementation(() => response);
 
         login = String(Math.random());
@@ -289,12 +289,13 @@ describe('github duck', () => {
   });
 });
 
-function fakeResponse(error, json) {
+function fakeResponse(error, status, json) {
   if (error) {
     return Promise.reject(error);
   }
 
   return Promise.resolve({
+    status,
     json: jest.fn(() => Promise.resolve(json))
   });
 }

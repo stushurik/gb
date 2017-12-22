@@ -35,7 +35,11 @@ class App extends Component {
         <div className="row">
           <div className="col l5 m5">
             <section className="z-depth-3">
-              <SearchResults />
+              {this.props.hasApiErrors ? (
+                <div className="pink lighten-2">An error occurred while processing your request, please try again later</div>
+              ) : (
+                <SearchResults />
+              )}
             </section>
           </div>
           <div className="col l7 m7">

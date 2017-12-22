@@ -1,4 +1,4 @@
-import { createAction } from './actions';
+import { createAction } from './helpers/actions';
 
 export const SHOW_USER_DETAILS = 'SHOW_USER_DETAILS';
 export const HIDE_USER_DETAILS = 'HIDE_USER_DETAILS';

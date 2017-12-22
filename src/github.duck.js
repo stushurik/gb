@@ -1,16 +1,20 @@
 import { compose, combineReducers } from 'redux';
-import { createAction } from './actions'
+import { createAction, createAsyncFetchingAction } from './helpers/actions'
 
 const GITHUB_API_URL = 'https://api.github.com';
 
 export const SEARCH_USERS_REQUEST = 'SEARCH_USERS_REQUEST';
 export const SEARCH_USERS_SUCCESS = 'SEARCH_USERS_SUCCESS';
+export const SEARCH_USERS_ERROR = 'SEARCH_USERS_ERROR';
 export const GET_USER_REQUEST = 'GET_USER_REQUEST';
 export const GET_USER_SUCCESS = 'GET_USER_SUCCESS';
+export const GET_USER_ERROR = 'GET_USER_ERROR';
 export const GET_REPOS_REQUEST = 'GET_REPOS_REQUEST';
 export const GET_REPOS_SUCCESS = 'GET_REPOS_SUCCESS';
+export const GET_REPOS_ERROR = 'GET_REPOS_ERROR';
 export const GET_ISSUES_REQUEST = 'GET_ISSUES_REQUEST';
 export const GET_ISSUES_SUCCESS = 'GET_ISSUES_SUCCESS';
+export const GET_ISSUES_ERROR = 'GET_ISSUES_ERROR';
 export const RESET_USERS = 'RESET_USERS';
 
 
@@ -26,7 +30,8 @@ function usersReducer(
     query: null,
     fetching: false,
     fetchingFor: null,
-    results: {}
+    results: {},
+    error: false
   },
   { type, payload }
 ) {
@@ -41,12 +46,19 @@ function usersReducer(
       return {
         ...state,
         searching: false,
-        results: groupBy(payload.users, u => u.login)
+        results: groupBy(payload.users, u => u.login),
+        error: false
       };
+
+    case SEARCH_USERS_ERROR:
+      return { ...state, error: true }
 
     case GET_USER_SUCCESS:
       const clonedResults = { ...state.results, [payload.login]: payload.user };
-      return { ...state, fetching: false, results: clonedResults };
+      return { ...state, fetching: false, results: clonedResults, error: false };
+
+    case GET_USER_ERROR:
+      return { ...state, error: true }
 
     case RESET_USERS:
       return {
@@ -54,7 +66,8 @@ function usersReducer(
         query: null,
         fetching: false,
         fetchingFor: null,
-        results: {}
+        results: {},
+        error: false
       };
     default:
       return state;
@@ -65,7 +78,8 @@ function reposReducer(
   state = {
     fetching: false,
     login: null,
-    results: {}
+    results: {},
+    error: false
   },
   { type, payload }
 ) {
@@ -78,7 +92,10 @@ function reposReducer(
         ...state.results,
         [state.login]: payload.repos
       };
-      return { ...state, fetching: false, results: clonedResults };
+      return { ...state, fetching: false, results: clonedResults, error: false };
+
+    case GET_REPOS_ERROR:
+      return { ...state, error: true }
 
     default:
       return state;
@@ -89,13 +106,15 @@ function issuesReducer(
   state = {
     fetching: false,
     login: null,
-    results: {}
+    results: {},
+    error: false
   },
   { type, payload }
 ) {
   switch (type) {
     case GET_ISSUES_REQUEST:
       return { ...state, fetching: true, login: payload.login };
+
     case GET_ISSUES_SUCCESS:
       const clonedResults = {
         ...state.results,
@@ -104,8 +123,13 @@ function issuesReducer(
       return {
         ...state,
         fetching: false,
-        results: clonedResults
+        results: clonedResults,
+        error: false
       };
+    
+    case GET_ISSUES_ERROR:
+      return { ...state, error: true }
+
     default:
       return state;
   }
@@ -122,6 +146,7 @@ export function searchUsers(query) {
     `${GITHUB_API_URL}/search/users?q=${query}`,
     requestUsers.bind(null, query),
     rememberUsers,
+    notifyAboutUsersError,    
     result => result.items
   );
 }
@@ -134,6 +159,10 @@ function rememberUsers(users) {
   return createAction(SEARCH_USERS_SUCCESS, { users });
 }
 
+function notifyAboutUsersError() {
+  return createAction(SEARCH_USERS_ERROR);
+}
+
 export function resetUsers() {
   return createAction(RESET_USERS);
 }
@@ -143,7 +172,8 @@ export function getUser(login) {
   return createAsyncFetchingAction(
     `${GITHUB_API_URL}/users/${login}`,
     requestUserDetails.bind(null, login),
-    saveUserDetails.bind(null, login)
+    saveUserDetails.bind(null, login),
+    notifyAboutUserDetailsError
   );
 }
 
@@ -155,12 +185,18 @@ function saveUserDetails(login, user) {
   return createAction(GET_USER_SUCCESS, { login, user });
 }
 
+
+function notifyAboutUserDetailsError() {
+  return createAction(GET_USER_ERROR);
+}
+
 // Repos api
 export function getRepos(login) {
   return createAsyncFetchingAction(
     `${GITHUB_API_URL}/users/${login}/repos`,
     requestReposForUser.bind(null, login),
-    rememberRepos.bind(null, login)
+    rememberRepos.bind(null, login),
+    notifyAboutRepoError
   );
 }
 
@@ -179,12 +215,17 @@ function rememberRepos(login, repos) {
   };
 }
 
+function notifyAboutRepoError() {
+  return createAction(GET_REPOS_ERROR);
+}
+
 // Issues api
 export function getIssues(login, repoName) {
   return createAsyncFetchingAction(
     `${GITHUB_API_URL}/repos/${login}/${repoName}/issues`,
     requestIssues.bind(null, login, repoName),
-    rememberIssues.bind(null, repoName)
+    rememberIssues.bind(null, repoName),
+    notifyAboutIssuesError
   );
 }
 
@@ -196,26 +237,11 @@ function rememberIssues(repoName, issues) {
   return createAction(GET_ISSUES_SUCCESS, { repoName, issues });
 }
 
+function notifyAboutIssuesError() {
+  return createAction(GET_ISSUES_ERROR);
+}
+
 // Utils
-function createAsyncFetchingAction(
-  path,
-  requestActionCreator,
-  successActionCreator,
-  resultAccessor = identity
-) {
-  return dispatch => {
-    dispatch(requestActionCreator());
-    return fetch(path)
-      .then(response => response.json())
-      .then(resultAccessor)
-      .then(compose(dispatch, successActionCreator));
-  };
-}
-
-function identity(arg) {
-  return arg;
-}
-
 function groupBy(items, predicate) {
   return items.reduce((acc, elem) => {
     acc[predicate(elem)] = elem;

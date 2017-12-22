@@ -3,9 +3,10 @@ import { resetUsers } from "./github.duck";
 import { hideUserDetails } from './ui.duck';
 import App from "./app";
 
-function mapStateToProps({ ui }) {
+function mapStateToProps({ github: {users, repos, issues}, ui }) {
   return {
-    isUserDetailsVisible: ui.isUserDetailsVisible
+    isUserDetailsVisible: ui.isUserDetailsVisible,
+    hasApiErrors: users.error || repos.error || issues.error
   };
 }
 

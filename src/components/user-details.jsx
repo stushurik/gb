@@ -1,5 +1,5 @@
 import React from 'react';
-import UserDetailsLoader from './user-details-loader.container';
+import { UserDetailsLoader } from '../containers';
 import './user-details.css';
 
 export default ({ user, repos, issuesByRepos }) => (

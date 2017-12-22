@@ -1,4 +1,6 @@
-jest.mock('./search-results-loader.container', () => ({children}) => childrenu)
+jest.mock('../containers', () => ({
+  SearchResultsLoader: ({children}) => children
+}))
 
 import React from 'react';
 import renderer from 'react-test-renderer';

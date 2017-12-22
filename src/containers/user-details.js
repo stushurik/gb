@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import UserDetails from './user-details';
+import { UserDetails } from '../components';
 
 function mapStateToProps({
   github: {

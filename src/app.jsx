@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import Search from './search.container';
-import SearchResults from './search-results.container';
-import UserDetails from './user-details.container';
+import { Search, SearchResults, UserDetails } from './containers';
 import 'materialize-css/dist/css/materialize.css';
 
 const ESC_KEY_CODE = 27;

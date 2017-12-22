@@ -1,5 +1,5 @@
 import React from 'react';
-import SearchResultsLoader from './search-results-loader.container'
+import { SearchResultsLoader } from '../containers';
 import './search-result.css';
 
 export default ({ users, onUserSelect }) =>

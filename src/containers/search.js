@@ -1,7 +1,7 @@
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { searchUsers } from './github.duck';
-import Search from './search';
+import { searchUsers } from '../github.duck';
+import { Search } from '../components';
 
 function mapStateToProps({ github: { users: { query } } }) {
   return { query };

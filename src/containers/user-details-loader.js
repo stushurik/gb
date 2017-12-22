@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import Loader from './loader';
+import Loader from '../components/loader';
 
 function mapStateToProps({ github: { users: { fetching } } }) {
   return {

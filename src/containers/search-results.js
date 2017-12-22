@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
-import { showUserDetails } from './ui.duck';
-import { getUser, getRepos } from './github.duck';
-import SearchResults from './search-results';
+import { showUserDetails } from '../ui.duck';
+import { getUser, getRepos } from '../github.duck';
+import { SearchResults } from '../components';
 
 function mapStateToProps({ github: { users: { results } } }) {
   return {

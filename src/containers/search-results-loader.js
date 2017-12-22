@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import Loader from './loader';
+import { Loader } from '../components';
 
 function mapStateToProps({ github: { users: { searching } } }) {
   return {
